@@ -19,13 +19,7 @@ const swaggerOptions: swaggerJSDoc.Options = {
       schemas: {
         SineteInput: {
           type: 'object',
-          required: [
-            'nome',
-            'descricao',
-            'categoria',
-            'nivelPerigo',
-            'raro',
-          ],
+          required: ['nome', 'descricao', 'categoria', 'nivelPerigo', 'raro'],
           properties: {
             nome: {
               type: 'string',
