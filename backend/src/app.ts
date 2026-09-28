@@ -1,5 +1,7 @@
 import cors from 'cors';
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './docs/swagger.js';
 import sineteRoutes from './routes/SineteRoutes.js';
 
 const app = express();
@@ -14,5 +16,7 @@ app.get('/', (_req, res) => {
 });
 
 app.use('/api/sinetes', sineteRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 export default app;
