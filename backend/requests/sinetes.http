@@ -1,0 +1,44 @@
+### Listar todos os sinetes
+GET http://localhost:3000/api/sinetes
+
+### Buscar um sinete por ID
+GET http://localhost:3000/api/sinetes/5
+
+### Cadastrar um sinete
+POST http://localhost:3000/api/sinetes
+Content-Type: application/json
+
+{
+  "nome": "Manipulação de Sombras",
+  "descricao": "Permite controlar e moldar sombras.",
+  "categoria": "Ofensivo",
+  "nivelPerigo": 5,
+  "raro": true
+}
+
+### Cadastrar sinete com nivelPerigo inválido
+POST http://localhost:3000/api/sinetes
+Content-Type: application/json
+
+{
+  "nome": "Teste",
+  "descricao": "Sinete de teste",
+  "categoria": "Ofensivo",
+  "nivelPerigo": 8,
+  "raro": false
+}
+
+### Atualizar um sinete
+PUT http://localhost:3000/api/sinetes/3
+Content-Type: application/json
+
+{
+  "nome": "Manipulação de Sombras Avançada",
+  "descricao": "Permite controlar, moldar e expandir sombras.",
+  "categoria": "Ofensivo",
+  "nivelPerigo": 4,
+  "raro": true
+}
+
+### Excluir um sinete
+DELETE http://localhost:3000/api/sinetes/2
