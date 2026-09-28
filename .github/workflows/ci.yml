@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configura Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Configura pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Instala dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Executa ESLint
+        run: pnpm --dir backend lint
+
+      - name: Verifica TypeScript
+        run: pnpm --dir backend exec tsc --noEmit
+
+      - name: Gera build
+        run: pnpm --dir backend build
