@@ -1,0 +1,2 @@
+pnpm --dir backend lint
+pnpm --dir backend exec tsc --noEmit
