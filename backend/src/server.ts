@@ -2,7 +2,7 @@ import app from './app.js';
 import database from './config/database.js';
 import './models/Sinete.js';
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 const startServer = async (): Promise<void> => {
   try {
