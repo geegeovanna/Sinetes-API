@@ -230,11 +230,15 @@ Também possui suporte a CORS.
 
 ### Banco de dados
 
-O projeto utiliza PostgreSQL com Sequelize ORM.
+O projeto utiliza **PostgreSQL** como banco de dados e **Sequelize ORM** para realizar o mapeamento e a persistência dos dados.
 
-A conexão é configurada através de variáveis de ambiente.
+Na atividade de **LDW**, o PostgreSQL foi utilizado por meio do **Supabase**, que disponibiliza uma instância PostgreSQL hospedada. A aplicação se conecta ao banco utilizando as credenciais configuradas no arquivo `.env`.
 
-O projeto permite configurar o uso de SSL através da variável:
+Na atividade de **IEC**, foi adicionada uma configuração alternativa utilizando **PostgreSQL em container Docker**, através do Docker Compose. Dessa forma, a aplicação pode ser executada de forma containerizada sem depender do banco hospedado no Supabase.
+
+A conexão com o banco é configurada através de variáveis de ambiente, incluindo a configuração de SSL por meio da variável `DB_SSL`.
+
+Para uma conexão com o Supabase:
 
 ```env
 DB_SSL=true
@@ -315,6 +319,12 @@ DB_SSL=false
 O arquivo `.env` não é versionado no GitHub.
 
 #### Executando a aplicação
+
+Entre na pasta do backend:
+
+```bash
+cd backend
+```
 
 Para executar a aplicação em modo de desenvolvimento:
 
