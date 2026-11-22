@@ -1,30 +1,46 @@
-# Sinetes de Quarta Asa
+# DRACONIS — Sinetes de Quarta Asa
 
-API RESTful para gerenciamento de Sinetes inspirada no universo de **Quarta Asa**, desenvolvida com Node.js, Express, TypeScript, Sequelize e PostgreSQL.
+Aplicação web para cadastro, consulta e gerenciamento de Sinetes inspirada no universo de **Quarta Asa**, desenvolvida em arquitetura monorepo com React, TypeScript, Node.js, Express, Sequelize e PostgreSQL.
 
-O projeto foi desenvolvido originalmente para a disciplina de **Laboratório de Desenvolvimento Web (LDW)** e posteriormente utilizado na disciplina de **Integração e Entrega Contínua (IEC)**, onde foram adicionados recursos de qualidade de código, containerização, Docker Compose, Husky e integração contínua com GitHub Actions.
+O projeto foi desenvolvido originalmente para a disciplina de **Laboratório de Desenvolvimento Web (LDW)**, contemplando o desenvolvimento de uma API RESTful e de uma aplicação frontend integrada. Posteriormente, foi utilizado na disciplina de **Integração e Entrega Contínua (IEC)**, onde foram adicionados recursos de qualidade de código, containerização, Docker Compose, Husky e integração contínua com GitHub Actions.
 
 ---
 
 ## Sobre o projeto
 
-A aplicação permite cadastrar e gerenciar Sinetes, representando diferentes poderes e características do universo de Quarta Asa.
+O DRACONIS é uma aplicação web que permite cadastrar, consultar e gerenciar Sinetes, representando diferentes poderes e características do universo de Quarta Asa.
 
 Cada Sinete possui informações como:
 
-- Nome
-- Descrição
-- Categoria
-- Nível de perigo
-- Indicação se é raro
+- Nome;
+- Descrição;
+- Categoria;
+- Nível de perigo;
+- Indicação se é raro.
 
-A API disponibiliza operações completas de CRUD e possui documentação interativa utilizando Swagger UI.
+O projeto é organizado em um monorepo, composto por duas aplicações principais:
+
+- **Frontend:** interface web desenvolvida com React e TypeScript, responsável pela apresentação e interação do usuário com os Sinetes.
+- **Backend:** API RESTful desenvolvida com Node.js, Express e TypeScript, responsável pelas regras de negócio, operações CRUD e persistência dos dados no PostgreSQL.
+
+A comunicação entre as aplicações é realizada por meio de requisições HTTP, utilizando uma camada de serviços no frontend para consumir os endpoints disponibilizados pela API.
+
+O backend também possui documentação interativa utilizando Swagger UI.
 
 Na etapa de IEC, o projeto recebeu uma infraestrutura baseada em Docker, além de verificações automáticas de qualidade e uma esteira de integração contínua.
 
----
-
 ## Tecnologias utilizadas
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui
+- React Router
+- Lucide React
+- Sonner
 
 ### Backend
 
@@ -56,6 +72,7 @@ Na etapa de IEC, o projeto recebeu uma infraestrutura baseada em Docker, além d
 ## Estrutura do projeto
 
 ```text
+
 Sinetes-API/
 ├── .github/
 │   └── workflows/
@@ -68,22 +85,16 @@ Sinetes-API/
 │   ├── src/
 │   │   ├── config/
 │   │   │   └── database.ts
-│   │   │
 │   │   ├── controllers/
 │   │   │   └── SineteController.ts
-│   │   │
 │   │   ├── docs/
 │   │   │   └── swagger.ts
-│   │   │
 │   │   ├── models/
 │   │   │   └── Sinete.ts
-│   │   │
 │   │   ├── routes/
 │   │   │   └── SineteRoutes.ts
-│   │   │
 │   │   ├── app.ts
 │   │   └── server.ts
-│   │
 │   ├── .env.example
 │   ├── Dockerfile
 │   ├── eslint.config.js
@@ -91,19 +102,43 @@ Sinetes-API/
 │   ├── prettier.config.json
 │   └── tsconfig.json
 │
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   │   └── ui/
+│   │   ├── layouts/
+│   │   ├── lib/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── types/
+│   │   ├── App.tsx
+│   │   ├── App.css
+│   │   ├── index.css
+│   │   └── main.tsx
+│   ├── .env.example
+│   ├── package.json
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
+│
 ├── .dockerignore
 ├── .gitignore
 ├── docker-compose.yml
 ├── package.json
 ├── pnpm-lock.yaml
 └── pnpm-workspace.yaml
+
 ```
 
 ---
 
 ## Laboratório de Desenvolvimento Web — LDW
 
-A primeira etapa do projeto consiste no desenvolvimento de uma API RESTful utilizando arquitetura MVC, persistência relacional com Sequelize e PostgreSQL e documentação interativa com Swagger.
+A primeira etapa do projeto consiste no desenvolvimento de uma aplicação web organizada em arquitetura monorepo, integrando um frontend desenvolvido com React e TypeScript a uma API RESTful construída com Node.js, Express e TypeScript.
+
+O backend utiliza arquitetura MVC, persistência relacional com Sequelize e PostgreSQL e documentação interativa com Swagger UI. O frontend disponibiliza a interface para consulta e gerenciamento dos Sinetes, consumindo os recursos da API por meio de uma camada de serviços.
 
 ### Arquitetura
 
@@ -227,6 +262,41 @@ A API utiliza códigos HTTP semânticos, incluindo:
 - `500 Internal Server Error`
 
 Também possui suporte a CORS.
+
+### Frontend
+
+A aplicação frontend do DRACONIS foi desenvolvida com React e TypeScript, utilizando Vite como ferramenta de desenvolvimento e build.
+
+A interface possui uma identidade visual inspirada no universo de Quarta Asa, com uma temática de fantasia medieval, elementos visuais relacionados aos Sinetes e uma apresentação voltada à organização e gerenciamento dos registros.
+
+A aplicação está organizada em componentes reutilizáveis e possui as seguintes áreas principais:
+
+- **Página inicial:** apresenta o universo DRACONIS, introduz os Sinetes e organiza suas categorias.
+- **Gerenciamento:** disponibiliza funcionalidades para cadastrar, consultar, editar e remover Sinetes.
+
+#### Organização do frontend
+
+- **Components:** componentes reutilizáveis da interface.
+- **Layouts:** estruturas compartilhadas entre as páginas.
+- **Pages:** páginas principais da aplicação.
+- **Services:** camada responsável pela comunicação com a API.
+- **Types:** definições de tipos e interfaces TypeScript.
+- **Assets:** imagens e recursos visuais utilizados na aplicação.
+- **Lib:** funções auxiliares e utilitários.
+
+#### Integração com a API
+
+A comunicação entre frontend e backend é realizada por meio do serviço `sineteService.ts`, responsável por centralizar as requisições HTTP relacionadas aos Sinetes.
+
+A URL base da API é configurada através da variável de ambiente `VITE_API_URL`.
+
+Exemplo:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+O frontend utiliza os endpoints disponibilizados pelo backend para realizar as operações de CRUD, mantendo a comunicação entre as duas aplicações.
 
 ### Banco de dados
 
@@ -355,6 +425,30 @@ Acesse:
 ```text
 http://localhost:3000/api-docs
 ```
+
+#### Executando o frontend
+
+Com as dependências instaladas na raiz do monorepo, configure o ambiente do frontend.
+
+Na pasta `frontend`, copie o arquivo `.env.example` para `.env` e configure a URL da API:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+Para iniciar o frontend em modo de desenvolvimento, execute na raiz do projeto:
+
+```bash
+pnpm --dir frontend dev
+```
+
+A aplicação estará disponível no endereço informado pelo Vite, normalmente:
+
+```text
+http://localhost:5173
+```
+
+Certifique-se de que o backend esteja em execução para que o frontend consiga realizar as operações de consulta e gerenciamento dos Sinetes.
 
 ---
 
