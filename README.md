@@ -573,7 +573,7 @@ O PostgreSQL possui um `healthcheck`, e a API aguarda o banco estar saudável an
 
 ### GitHub Actions
 
-O projeto possui uma esteira de integração contínua em:
+O projeto possui uma esteira de integração e entrega contínua (CI/CD), configurada em:
 
 ```text
 .github/workflows/ci.yml
@@ -582,19 +582,100 @@ O projeto possui uma esteira de integração contínua em:
 O workflow é executado automaticamente em:
 
 - `push` para a branch `main`;
-- `pull request` para a branch `main`.
+- `pull request` direcionado à branch `main`.
 
 As principais etapas da pipeline são:
 
 1. Checkout do código;
-2. Configuração do Node.js;
-3. Configuração do pnpm;
-4. Instalação das dependências;
+2. Configuração do Node.js 24;
+3. Configuração do pnpm 12.6.0;
+4. Instalação das dependências do backend;
 5. Execução do ESLint;
-6. Verificação do TypeScript;
-7. Geração do build.
+6. Verificação dos tipos com TypeScript;
+7. Build de produção do backend;
+8. Construção da imagem Docker.
 
-O objetivo é verificar automaticamente se o projeto continua funcionando corretamente após alterações no repositório.
+Após a conclusão das verificações, quando ocorre um `push` na branch `main`, o GitHub Actions utiliza o **Render Deploy Hook** para solicitar um novo deploy da API.
+
+O Deploy Hook é armazenado como um segredo do repositório no GitHub Actions (`RENDER_DEPLOY_HOOK_URL`), evitando a exposição da URL de implantação no código-fonte.
+
+O serviço no Render utiliza o recurso Docker e permanece com o Auto-Deploy desativado. Dessa forma, as implantações são controladas pela pipeline configurada no GitHub Actions.
+
+### Deploy em produção — Render
+
+A API está publicada no Render, utilizando uma imagem Docker construída a partir do `backend/Dockerfile`.
+
+**URL pública:**
+
+```text
+https://draconis-api.onrender.com
+```
+
+**Principais endpoints:**
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `GET` | `/api/health` | Verifica a disponibilidade da API |
+| `GET` | `/api/sinetes` | Lista todos os Sinetes |
+| `GET` | `/api/sinetes/:id` | Busca um Sinete pelo ID |
+| `POST` | `/api/sinetes` | Cadastra um Sinete |
+| `PUT` | `/api/sinetes/:id` | Atualiza um Sinete |
+| `DELETE` | `/api/sinetes/:id` | Remove um Sinete |
+
+**Health Check:**
+
+```http
+GET https://draconis-api.onrender.com/api/health
+```
+
+Resposta esperada:
+
+```json
+{
+  "status": "ok",
+  "uptime": 120
+}
+```
+
+O valor de `uptime` representa o tempo de execução do processo em segundos e varia conforme o tempo de atividade da aplicação.
+
+**Documentação Swagger:**
+
+```text
+https://draconis-api.onrender.com/api-docs
+```
+
+### Configuração do ambiente de produção
+
+No Render, as variáveis de ambiente são configuradas diretamente nas configurações do serviço, sem necessidade de armazenar credenciais no repositório.
+
+As principais configurações utilizadas são:
+
+- `NODE_ENV`: ambiente de produção;
+- `DB_HOST`: endereço do servidor PostgreSQL;
+- `DB_PORT`: porta de conexão;
+- `DB_NAME`: nome do banco de dados;
+- `DB_USER`: usuário do banco;
+- `DB_PASSWORD`: senha do banco;
+- `DB_SSL`: habilita a conexão SSL.
+
+A variável `PORT` é fornecida automaticamente pelo Render. A aplicação utiliza essa variável para definir a porta de execução, com fallback para a porta `3000`.
+
+A conexão com o PostgreSQL utiliza SSL quando `DB_SSL=true`.
+
+### Fluxo de entrega contínua
+
+O processo de implantação segue o fluxo:
+
+1. O código é enviado para a branch `main`;
+2. O GitHub Actions inicia a pipeline;
+3. São executadas as verificações de qualidade, tipagem e build;
+4. A imagem Docker é construída;
+5. Se todas as etapas forem concluídas com sucesso, o Deploy Hook solicita a implantação no Render;
+6. O Render constrói e publica a nova versão da API;
+7. O endpoint `/api/health` é utilizado para verificar a disponibilidade do serviço.
+
+Esse processo permite automatizar a entrega da aplicação, mantendo as verificações de qualidade antes da implantação em produção.
 
 ---
 
