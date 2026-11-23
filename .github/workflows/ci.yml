@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD Backend
 
 on:
   push:
@@ -8,32 +8,58 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   quality:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configura Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
 
-      - name: Configura pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 12
+          version: 12.6.0
 
-      - name: Instala dependências
-        run: pnpm install --frozen-lockfile
+      - name: Install backend dependencies
+        run: pnpm install --frozen-lockfile --filter backend...
 
-      - name: Executa ESLint
+      - name: Run ESLint
         run: pnpm --dir backend lint
 
-      - name: Verifica TypeScript
+      - name: Check TypeScript
         run: pnpm --dir backend exec tsc --noEmit
 
-      - name: Gera build
+      - name: Build backend
         run: pnpm --dir backend build
+
+      - name: Build Docker image
+        run: docker build -t draconis-api -f backend/Dockerfile .
+
+      - name: Trigger Render Deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "Render Deploy Hook secret is not configured."
+            exit 1
+          fi
+
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "$RENDER_DEPLOY_HOOK_URL")
+
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "201" ]; then
+            echo "Render deploy failed. HTTP status: $STATUS"
+            exit 1
+          fi
+
+          echo "Render deploy triggered successfully. HTTP status: $STATUS"
