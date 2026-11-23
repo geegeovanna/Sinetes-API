@@ -18,6 +18,7 @@ app.get('/', (_req, res) => {
 app.get('/api/health', (_req, res) => {
   res.status(200).json({
     status: 'ok',
+    service: 'DRACONIS API',
     uptime: Math.floor(process.uptime()),
   });
 });
